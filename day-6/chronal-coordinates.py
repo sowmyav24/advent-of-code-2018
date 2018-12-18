@@ -38,13 +38,23 @@ def find_distance(coordinates, ix, iy, grid):
 			count += 1
 	return int(value) if count == 1 else 0			 
 
+def find_region_count(coordinates, grid):
+	count = 0
+	for ix,iy in np.ndindex(grid.shape):
+		distance = 0
+		for c in coordinates:
+			distance += abs(ix-c[1]) + abs(iy-c[0])
+		if distance < 10000:
+			count += 1
+	print(count)				
+
 def find_frequent(grid, x_axis, y_axis):
 		unique, counts = np.unique(grid, return_counts=True)
 		frequency = np.asarray((unique, counts)).T	
 		ordered_frequency = sorted(frequency, key=lambda x: x[1],  reverse=True)
 		for freq in ordered_frequency:
 			if freq[0] not in (grid[x_axis - 1, 0:y_axis-1]) and freq[0] not in (grid[0, 0:y_axis - 1]) and freq[0] not in (grid[0:x_axis - 1, y_axis-1]) and freq[0] not in (grid[0:x_axis - 1, 0]) :
-				print(freq[1])
+				print(int(freq[1]))
 				break		
 
 def main():
@@ -56,6 +66,7 @@ def main():
 		grid = calculate_distance(coordinates, grid)
 		print("Solution 1 : ")
 		find_frequent(grid, grid.shape[0], grid.shape[1])
+		find_region_count(coordinates, grid)
 
 if __name__ == '__main__':
     main()
