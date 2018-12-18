@@ -8,18 +8,17 @@ def read_input(filename):
 		input_lines.append(line)
 
 def count_occurences(input_lines):
-	char_dict = collections.defaultdict(int)
 	two_count = 0
 	three_count = 0
 	
 	for line in input_lines:
+		char_dict = collections.defaultdict(int)
 		for c in line:
 			char_dict[c] += 1
 		if 2 in char_dict.values():
 			two_count += 1
 		if 3 in char_dict.values():
 			three_count += 1
-		char_dict = collections.defaultdict(int)
 
 	print(two_count * three_count)			
 
