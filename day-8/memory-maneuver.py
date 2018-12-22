@@ -1,4 +1,5 @@
 import sys
+import collections 
 
 def read_input(filename):
     input = []
@@ -22,6 +23,21 @@ def calculate_checksum(index, checksum, input):
     else:
         return index, checksum
 
+def calculate_root_checksum(input_iter, child_count, metadata_count):
+    if child_count == 0:
+        return sum(next(input_iter) for i in range(metadata_count))
+
+    value = 0
+    value_children = collections.defaultdict(int)
+
+    for i in range(child_count):
+        value_children[i] = calculate_root_checksum(input_iter, next(input_iter), next(input_iter))
+    
+    for i in range(metadata_count):
+        value += value_children[next(input_iter) - 1]
+
+    return value
+
 def main():
     if len(sys.argv) < 2:
         print("Pass the input file as the argument")
@@ -30,6 +46,13 @@ def main():
         index, checksum = calculate_checksum(0, [], input)
         print("Solution 1 :")
         print(sum(checksum))
+        print("Solution 2 :")
+        input_iter = iter(input)
+        print(calculate_root_checksum(input_iter, next(input_iter), next(input_iter)))
 
 if __name__ == '__main__':
     main()
+
+
+
+
