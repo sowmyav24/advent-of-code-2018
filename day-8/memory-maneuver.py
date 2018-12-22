@@ -23,6 +23,19 @@ def calculate_checksum(index, checksum, input):
     else:
         return index, checksum
 
+def calculate_checksum_using_iter(checksum, input_iter):
+    child_count = next(input_iter)
+    metadata_count = next(input_iter)
+    checksum = 0
+    if child_count == 0:
+        return sum(next(input_iter) for i in range(metadata_count))       
+    else:
+        for i in range(child_count):
+            checksum += calculate_checksum_using_iter(checksum, input_iter)
+        checksum += sum(next(input_iter) for i in range(metadata_count))
+    
+    return checksum
+
 def calculate_root_checksum(input_iter, child_count, metadata_count):
     if child_count == 0:
         return sum(next(input_iter) for i in range(metadata_count))
@@ -46,8 +59,13 @@ def main():
         index, checksum = calculate_checksum(0, [], input)
         print("Solution 1 :")
         print(sum(checksum))
+
+        input_iter = iter(read_input(sys.argv[1]))
+        print("Solution 1 using iter :")
+        print(calculate_checksum_using_iter([], input_iter))
+        
         print("Solution 2 :")
-        input_iter = iter(input)
+        input_iter = iter(read_input(sys.argv[1]))
         print(calculate_root_checksum(input_iter, next(input_iter), next(input_iter)))
 
 if __name__ == '__main__':
